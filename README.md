@@ -62,16 +62,16 @@ To run the server locally with auto-reload:
 ```bash
 make dev
 ```
-The server will start at `http://127.0.0.1:8000`.
-- Interactive docs: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
-- Alternative docs: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
+The server will start at `http://127.0.0.1:8001`.
+- Interactive docs: [http://127.0.0.1:8001/docs](http://127.0.0.1:8001/docs)
+- Alternative docs: [http://127.0.0.1:8001/redoc](http://127.0.0.1:8001/redoc)
 
 ### Running with Docker Compose
 To build and start both the API and a local PostgreSQL database container:
 ```bash
 docker-compose up --build
 ```
-This mounts the DB on port `5432` and the API on port `8000`.
+This mounts the DB on port `5432` and the API on port `8001` (or the custom port specified in your `.env` / environment `PORT` variable).
 
 ---
 
@@ -79,22 +79,33 @@ This mounts the DB on port `5432` and the API on port `8000`.
 
 ### Dependency Management (with `uv`)
 - Add a new dependency:
-  ```bash
-  uv add <package-name>
-  ```
+```bash
+uv add <package-name>
+```
 - Add a development-only dependency:
-  ```bash
-  uv add --dev <package-name>
-  ```
+```bash
+uv add --dev <package-name>
+```
 - Install all defined packages:
-  ```bash
-  uv sync
-  ```
+```bash
+uv sync
+```
 
 ### Linting and Formatting
-Check the code formatting using Ruff:
+You can check code style and formatting using Ruff, and perform type checking using Pyrefly.
+
+Run all checks via `makefile` shortcut:
 ```bash
-uv run ruff check .
+make check
+```
+
+Or run individual commands:
+```bash
+# Run Ruff linting checks
+make lint
+
+# Run Pyrefly type checks
+make typecheck
 ```
 
 ### Running Tests
@@ -114,3 +125,18 @@ uv run pytest
 | `/extraction` | `extraction` | Document text and metadata extraction endpoints |
 | `/comparison` | `comparison` | Document structure and text comparison endpoints |
 | `/jobs` | `jobs` | Background tasks tracking and status |
+
+---
+
+## GPU Dependencies (PaddlePaddle)
+If you need to install or update the `paddlepaddle-gpu` package, you must specify custom PyPI indexes for CUDA-specific packages.
+
+Install using the preconfigured `paddle` index:
+```bash
+uv add paddlepaddle-gpu==3.2.0 --index paddle
+```
+
+Or specify the full index URL with the required index strategy:
+```bash
+uv add paddlepaddle-gpu==3.2.0 --index https://www.paddlepaddle.org.cn/packages/stable --index-strategy unsafe-best-match
+```

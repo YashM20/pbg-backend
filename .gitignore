@@ -10,3 +10,6 @@ wheels/
 .venv
 .env*
 !.env.sample
+
+# Cache and temp files
+cache/

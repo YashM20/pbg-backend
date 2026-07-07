@@ -8,5 +8,5 @@ COPY app ./app
 FROM python:3.12-slim
 WORKDIR /app
 COPY --from=builder /app /app
-EXPOSE 8000
-CMD ["/app/.venv/bin/fastapi", "run", "app/main.py", "--port", "8000", "--host", "0.0.0.0"]
+EXPOSE 8001
+CMD ["/bin/sh", "-c", "exec /app/.venv/bin/fastapi run app/main.py --port ${PORT:-8001} --host 0.0.0.0"]
